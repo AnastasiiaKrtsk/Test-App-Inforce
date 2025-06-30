@@ -1,14 +1,14 @@
 import React from 'react';
 import '../styles/ProductModal.scss';
 
-export const ProductModal = ({ onClose, onSubmit }) => {
+export const DeleteModal = ({ onDelete, onClose }) => {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-box" onClick={(e) => e.stopPropagation()}>
-        <h2 className="modal-title">Add item on mockapi.io</h2>
+        <h2 className="modal-title">Confirm delete this item?</h2>
         <div className="modal-buttons">
-          <button className="btn btn-primary" onClick={onSubmit}>
-            Add
+          <button className="btn btn-primary" onClick={onDelete}>
+            Delete
           </button>
           <button className="btn btn-secondary" onClick={onClose}>
             Close
@@ -19,4 +19,4 @@ export const ProductModal = ({ onClose, onSubmit }) => {
   );
 };
 
-export default ProductModal;
+export default DeleteModal;

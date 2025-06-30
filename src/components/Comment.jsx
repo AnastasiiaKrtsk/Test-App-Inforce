@@ -1,18 +1,15 @@
 // src/components/Comment.jsx
 import React from 'react';
 
-function Comment({ comment, onDelete }) {
+export const Comment = ({ comment, onDelete }) => {
   return (
-    <div className="comment flex justify-between items-center p-2 border-b">
-      <span>{comment.text}</span>
-      <button
-        onClick={onDelete}
-        className="text-red-500 hover:underline text-sm"
-      >
+    <div className="comment-container">
+      <span className="text-comment">{comment}</span>
+      <button onClick={onDelete} className="btn-delete">
         Delete
       </button>
     </div>
   );
-}
+};
 
 export default Comment;

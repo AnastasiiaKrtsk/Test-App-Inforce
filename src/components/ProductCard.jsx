@@ -1,46 +1,50 @@
-// src/components/ProductCard.jsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/ProductCard.scss';
 
-function ProductCard({ product, onEdit, onDelete }) {
+export const ProductCard = ({ product, onEdit, onDelete }) => {
   const navigate = useNavigate();
+
+  const width = product.size?.width ?? 100;
+  const height = product.size?.height ?? 100;
+
+  const commentsCount = Array.isArray(product.comments)
+    ? product.comments.length
+    : 0;
 
   return (
     <div className="product-card">
-      <div onClick={() => navigate(`/products/${product.id}`)}>
+      <div
+        onClick={() => navigate(`/products/${product.id}`)}
+        style={{ cursor: 'pointer' }}
+      >
         <img
           src={product.imageUrl}
           alt={product.name}
           className="card-img"
           width={200}
           height={300}
+          loading="lazy" // ← Lazy load image
         />
-        <h3 className="text-lg font-semibold">{product.name}</h3>
+        <h3 className="text">{product.name}</h3>
         <p>Count: {product.count}</p>
         <p>Weight: {product.weight}</p>
         <p>
-          Size: {product.size.width} x {product.size.height}
+          Size: {width} x {height}
         </p>
-        <p>Comments: {product.comments?.length}</p>
+        <p>Comments: {commentsCount}</p>
       </div>
 
-      <div className="flex justify-end gap-2 mt-2">
-        <button
-          onClick={() => onEdit(product)}
-          className="btn btn-sm btn-primary"
-        >
+      <div className="flex">
+        <button onClick={() => onEdit(product)} className="btn">
           Edit
         </button>
-        <button
-          onClick={() => onDelete(product)}
-          className="btn btn-sm btn-danger"
-        >
+        <button onClick={() => onDelete(product)} className="btn">
           Delete
         </button>
       </div>
     </div>
   );
-}
+};
 
 export default ProductCard;
