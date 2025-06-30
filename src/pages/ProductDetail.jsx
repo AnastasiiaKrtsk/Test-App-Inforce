@@ -1,99 +1,115 @@
 // src/pages/ProductDetail.jsx
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axiosInstance from '../api/axiosInstance';
 import Comment from '../components/Comment';
-import ProductModal from '../components/ProductModal';
 
-function ProductDetail() {
+export const ProductDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [product, setProduct] = useState(null);
-  const [showModal, setShowModal] = useState(false);
+  const [newComment, setNewComment] = useState('');
 
   useEffect(() => {
+    fetchProduct();
+  }, [id]);
+
+  const fetchProduct = () => {
     axiosInstance
       .get(`/products/${id}`)
       .then((res) => setProduct(res.data))
-      .catch((err) => console.error('Error loading product', err));
-  }, [id]);
+      .catch((err) => {
+        console.error('Failed to fetch product', err);
+        navigate('/');
+      });
+  };
 
-  const handleEdit = (updatedData) => {
+  const handleAddComment = () => {
+    if (!newComment.trim()) return;
+
+    const updatedComments = [...(product.comments || []), newComment.trim()];
+
     axiosInstance
-      .put(`/products/${id}`, updatedData)
-      .then((res) => {
-        setProduct(res.data);
-        setShowModal(false);
+      .put(`/products/${id}`, { ...product, comments: updatedComments })
+      .then(() => {
+        setNewComment('');
+        fetchProduct();
       })
-      .catch((err) => console.error('Error updating product', err));
+      .catch((err) => console.error('Error adding comment:', err));
   };
 
-  const handleAddComment = (text) => {
-    const newComment = { id: Date.now(), text };
-    const updated = {
-      ...product,
-      comments: [...(product.comments || []), newComment],
-    };
-    handleEdit(updated);
-  };
+  const handleDeleteComment = (index) => {
+    const updatedComments = [...(product.comments || [])];
+    updatedComments.splice(index, 1);
 
-  const handleDeleteComment = (commentId) => {
-    const updated = {
-      ...product,
-      comments: product.comments.filter((c) => c.id !== commentId),
-    };
-    handleEdit(updated);
+    axiosInstance
+      .put(`/products/${id}`, { ...product, comments: updatedComments })
+      .then(() => fetchProduct())
+      .catch((err) => console.error('Error deleting comment:', err));
   };
 
   if (!product) return <div>Loading...</div>;
 
+  const width = product.size?.width ?? 100;
+  const height = product.size?.height ?? 100;
+
+  const comments = Array.isArray(product.comments) ? product.comments : [];
+
   return (
-    <div className="p-4">
-      <h2 className="text-2xl font-bold">{product.name}</h2>
-      <img src={product.imageUrl} alt={product.name} width={300} />
-      <p>Count: {product.count}</p>
-      <p>Weight: {product.weight}</p>
-      <p>
-        Size: {product.size.width} x {product.size.height}
-      </p>
+    <div>
+      <button onClick={() => navigate(-1)}>← Back</button>
 
-      <button
-        onClick={() => setShowModal(true)}
-        className="btn btn-primary mt-4"
-      >
-        Edit Product
-      </button>
-
-      <h3 className="mt-6 font-semibold">Comments</h3>
-      <div className="mt-2">
-        {product.comments?.map((comment) => (
-          <Comment
-            key={comment.id}
-            comment={comment}
-            onDelete={() => handleDeleteComment(comment.id)}
-          />
-        ))}
-        <input
-          type="text"
-          placeholder="Add comment"
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && e.target.value.trim()) {
-              handleAddComment(e.target.value);
-              e.target.value = '';
-            }
-          }}
-          className="mt-2 border p-2 w-full"
+      <div>
+        <img
+          src={product.imageUrl}
+          alt={product.name}
+          width={300}
+          height={400}
         />
+        <h1>{product.name}</h1>
+        <p>
+          <strong>Count:</strong> {product.count}
+        </p>
+        <p>
+          <strong>Weight:</strong> {product.weight}
+        </p>
+        <p>
+          <strong>Size:</strong> {width} x {height}
+        </p>
+        <p>
+          <strong>Comments:</strong> {comments.length}
+        </p>
       </div>
 
-      {showModal && (
-        <ProductModal
-          initialData={product}
-          onClose={() => setShowModal(false)}
-          onSubmit={handleEdit}
-        />
-      )}
+      <div>
+        <h2>Comments</h2>
+
+        {comments.length > 0 ? (
+          <ul>
+            {comments.map((comment, index) => (
+              <Comment
+                key={index}
+                comment={comment}
+                onDelete={() => handleDeleteComment(index)}
+              />
+            ))}
+          </ul>
+        ) : (
+          <p>No comments yet.</p>
+        )}
+
+        <div>
+          <input
+            type="text"
+            placeholder="Add a comment..."
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+          />
+          <button onClick={handleAddComment}>Add</button>
+        </div>
+      </div>
     </div>
   );
-}
+};
 
 export default ProductDetail;
