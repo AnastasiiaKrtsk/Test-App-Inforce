@@ -8,7 +8,7 @@ import { successAction } from '../redux/productSlice';
 import { selectProducts } from '../redux/selectors';
 import '../styles/ProductList.scss';
 
-export const ProductList = () => {
+export const MockapiGallery = () => {
   const dispatch = useDispatch();
   const products = useSelector(selectProducts);
 
@@ -62,7 +62,7 @@ export const ProductList = () => {
   return (
     <div className="container">
       <div className="textx1">
-        <h1 className="textx2">Product List</h1>
+        <h2 className="textx2">Product List</h2>
         <button onClick={() => setShowModal(true)} className="btn btn-primary">
           Add Product
         </button>
@@ -72,7 +72,7 @@ export const ProductList = () => {
 
       <div className="product-list">
         {products
-          .slice() // clone to avoid mutating Redux state
+          .slice()
           .sort((a, b) => {
             const nameCompare = a.name.localeCompare(b.name);
             return nameCompare !== 0 ? nameCompare : a.count - b.count;
@@ -104,4 +104,4 @@ export const ProductList = () => {
   );
 };
 
-export default ProductList;
+export default MockapiGallery;

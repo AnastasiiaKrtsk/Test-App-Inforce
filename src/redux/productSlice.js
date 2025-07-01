@@ -6,15 +6,15 @@ const initialState = {
   page: 1,
 };
 
-const productsslice = createSlice({
+const productSlice = createSlice({
   name: 'products',
   initialState,
   reducers: {
-    successAction: (state, { payload }) => {
+    successAction: (state, action) => {
       if (state.page > 1) {
-        state.products.push(...payload);
+        state.products.push(...action.payload);
       } else {
-        state.products = payload;
+        state.products = action.payload;
       }
     },
     moreAction: (state) => {
@@ -28,6 +28,5 @@ const productsslice = createSlice({
   },
 });
 
-export const productsReducer = productsslice.reducer;
-export const { successAction, moreAction, searchAction } =
-  productsslice.actions;
+export const { successAction, moreAction, searchAction } = productSlice.actions;
+export const productsReducer = productSlice.reducer;
