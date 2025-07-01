@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/ProductCard.scss';
+import { nanoid } from 'nanoid';
 
 export const ProductCard = ({ product, onEdit, onDelete }) => {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ export const ProductCard = ({ product, onEdit, onDelete }) => {
           className="card-img"
           width={200}
           height={300}
-          loading="lazy" // ← Lazy load image
+          loading="lazy"
         />
         <h3 className="text">{product.name}</h3>
         <p>Count: {product.count}</p>

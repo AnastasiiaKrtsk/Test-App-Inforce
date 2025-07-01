@@ -1,0 +1,13 @@
+.modal-box {
+  width: 500px;
+  flex-direction: column;
+  display: flex;
+  justify-content: center;
+  flex-wrap: nowrap;
+  gap: 25px;
+}
+.modal-add-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
