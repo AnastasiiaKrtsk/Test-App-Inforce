@@ -62,7 +62,7 @@ export const MockapiGallery = () => {
   return (
     <div className="container">
       <div className="textx1">
-        <h2 className="textx2">Product List</h2>
+        <h2 className="textx2">Mockapi Products</h2>
         <button onClick={() => setShowModal(true)} className="btn btn-primary">
           Add Product
         </button>
