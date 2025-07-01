@@ -7,7 +7,7 @@ import Layout from './components/Layout';
 
 function App() {
   return (
-    <Router>
+    <Router basename="/Test-App-Inforce/">
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<MockapiGallery />} />
